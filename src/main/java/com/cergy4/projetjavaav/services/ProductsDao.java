@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.cergy4.projetjavaav.models.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import org.springframework.stereotype.Repository;
@@ -53,6 +54,15 @@ public class ProductsDao {
 
         assert id != null;
         product.setId(id);
+
+
+    }
+
+    public Product readById(int id) {
+        String sql = "SELECT * FROM products WHERE id = ?;";
+        List<Product> Products = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), id);
+
+        return Products.get(0);
 
 
     }
