@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 
 public class ProductsDao {
@@ -53,7 +55,7 @@ public class ProductsDao {
     }
 
     public List<Product> listAll() {
-        String sql = "SELECT * FROM users;";
+        String sql = "SELECT * FROM Products;";
         List<Product> list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class));
         return list;
     }

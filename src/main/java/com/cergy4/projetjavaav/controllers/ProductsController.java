@@ -45,11 +45,11 @@ public class ProductsController {
 
 
     //@GetMapping("")
-    @GetMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model){
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity.BodyBuilder index(Model model){
         List<Product> list = ProductDao.listAll();
         model.addAttribute("products", list);
-        return "/products/";
+        return ResponseEntity.ok();
     }
 
    @PutMapping("/{id}")
