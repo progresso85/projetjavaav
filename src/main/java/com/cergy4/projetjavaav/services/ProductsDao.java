@@ -1,12 +1,8 @@
 package com.cergy4.projetjavaav.services;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.cergy4.projetjavaav.models.Product;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -28,8 +24,6 @@ public class ProductsDao {
 
 
     public String checkValidity(Product product) {
-        if (product.getCreatedAt() == null)
-            return "missing field createdAt";
         if (product.getName() == null)
             return "missing field name";
         if (product.getRating() > 10 || product.getRating() < 0)
@@ -55,5 +49,20 @@ public class ProductsDao {
         product.setId(id);
 
 
+    }
+
+    public Product update(int id, Product product) {
+        String sql = "UPDATE products SET name = ?, rating = ?, type = ?, categoryId = ? " +
+                "WHERE id = ?;";
+
+        int result = jdbcTemplate.update(sql,
+                product.getName(), product.getRating(), product.getType(), product.getCategoryId(), id);
+
+        if (result != 1) {
+            return null;
+        }
+
+        return jdbcTemplate.query("SELECT * FROM products WHERE id = ?", BeanPropertyRowMapper.newInstance(Product.class),
+                id).get(0);
     }
 }
