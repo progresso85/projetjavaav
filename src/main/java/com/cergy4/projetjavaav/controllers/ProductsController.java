@@ -3,12 +3,10 @@ package com.cergy4.projetjavaav.controllers;
 
 import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.net.URI;
 import java.util.Date;
@@ -45,6 +43,7 @@ public class ProductsController {
         return ResponseEntity.created(URI.create("/products/"+ product.getId())).body(product);
     }
 
+
     //@GetMapping("")
     @GetMapping(value = "", method = RequestMethod.GET)
     public String index(Model model){
@@ -52,4 +51,20 @@ public class ProductsController {
         model.addAttribute("products", list);
         return "/products/";
     }
+
+   @PutMapping("/{id}")
+   public ResponseEntity<Object> updateProduct(@PathVariable int id, @RequestBody Product product) {
+       String error = productsDao.checkValidity(product);
+       if (error != null)
+           return ResponseEntity.badRequest().body(error);
+
+       Product updatedProduct = productsDao.update(id, product);
+
+       if (updatedProduct == null) {
+           return ResponseEntity.notFound().build();
+       }
+       else {
+           return ResponseEntity.ok(updatedProduct);
+       }
+   }
 }
