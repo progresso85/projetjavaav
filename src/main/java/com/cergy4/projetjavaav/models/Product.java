@@ -1,6 +1,7 @@
 package com.cergy4.projetjavaav.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class Product {
 
@@ -59,6 +60,5 @@ public class Product {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
-
 
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class ProductsController {
 
     private final ProductsDao productsDao;
-    private ProductsDao ProductDao;
+
 
     public ProductsController(ProductsDao productsDao) {
         this.productsDao = productsDao;
@@ -52,11 +52,10 @@ public class ProductsController {
     }
 
     //@GetMapping("")
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity.BodyBuilder index(Model model){
-        List<Product> list = ProductDao.listAll();
-        model.addAttribute("products", list);
-        return ResponseEntity.ok();
+    @GetMapping("")
+    public ResponseEntity<Object> listAll(){
+        List<Product> list = productsDao.listAll();
+        return ResponseEntity.ok(list);
     }
 
    @PutMapping("/{id}")
