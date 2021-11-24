@@ -51,8 +51,8 @@ public class ProductsController {
 
     }
 
-    //@GetMapping("")
-    @RequestMapping(value = "", method = RequestMethod.GET)
+
+    @GetMapping("")
     public ResponseEntity.BodyBuilder index(Model model){
         List<Product> list = ProductDao.listAll();
         model.addAttribute("products", list);
