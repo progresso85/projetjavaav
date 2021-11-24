@@ -43,6 +43,13 @@ public class ProductsController {
         return ResponseEntity.created(URI.create("/products/"+ product.getId())).body(product);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getProduct(@PathVariable int id){
+        Product product = productsDao.readById(id);
+
+        return ResponseEntity.ok(product);
+
+    }
 
     //@GetMapping("")
     @RequestMapping(value = "", method = RequestMethod.GET)
