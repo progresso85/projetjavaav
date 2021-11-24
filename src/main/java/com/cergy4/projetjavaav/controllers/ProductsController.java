@@ -51,11 +51,13 @@ public class ProductsController {
 
     }
 
+
     //@GetMapping("")
     @GetMapping("")
     public ResponseEntity<Object> listAll(){
         List<Product> list = productsDao.listAll();
         return ResponseEntity.ok(list);
+
     }
 
    @PutMapping("/{id}")
