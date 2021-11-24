@@ -10,6 +10,7 @@ public class Product {
     private byte rating;
     private Date createdAt;
     private int categoryId;
+    private int productId;
 
     public int getId() {
         return id;
@@ -58,4 +59,6 @@ public class Product {
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
     }
+
+
 }
