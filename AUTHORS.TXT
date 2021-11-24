@@ -1,0 +1,19 @@
+MEMBRES:
+Martin HEURIPEAU
+Toinon EMILE
+Birna HO VAN CAM RICHARD
+
+CRUD products :
+read all = Brian
+create = Toinon 
+update = Toinon
+read by ID = Martin
+delete = Brian
+CRUD categories = Toinon
+pagination = 
+filtres = 
+documentation du code = 
+doc api = 
+tri = 
+recherche = 
+tests unitaires = 

@@ -3,6 +3,9 @@ package com.cergy4.projetjavaav.controllers;
 
 import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -71,4 +74,20 @@ public class ProductsController {
            return ResponseEntity.ok(updatedProduct);
        }
    }
+
+    /* @RestController
+    @RequestMapping("/orders")
+    public class EmployeeController
+    {
+        @GetMapping
+        public ResponseEntity<List<Product>> getAllEmployees(
+                @RequestParam(defaultValue = "0") Integer pageNo,
+                @RequestParam(defaultValue = "1") Integer pageSize,
+                @RequestParam(defaultValue = "id") String sortBy)
+        {
+            List<Product> list = service.getAllEmployees(pageNo, pageSize, sortBy);
+
+            return new ResponseEntity<List<Product>>(list, new HttpHeaders(), HttpStatus.OK);
+        }
+    }*/
 }

@@ -84,8 +84,6 @@ public class ProductsDao {
         List<Product> Products = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), id);
 
         return Products.get(0);
-
-
     }
 }
 
