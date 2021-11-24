@@ -5,7 +5,6 @@ import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -48,16 +47,13 @@ public class ProductsController {
         Product product = productsDao.readById(id);
 
         return ResponseEntity.ok(product);
-
     }
 
 
-    //@GetMapping("")
     @GetMapping("")
     public ResponseEntity<Object> listAll(){
         List<Product> list = productsDao.listAll();
         return ResponseEntity.ok(list);
-
     }
 
    @PutMapping("/{id}")

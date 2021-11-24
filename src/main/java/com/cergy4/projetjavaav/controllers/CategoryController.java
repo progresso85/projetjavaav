@@ -42,7 +42,7 @@ public class CategoryController {
             return ResponseEntity.badRequest().body(error);
 
         categoryDao.add(category);
-        return ResponseEntity.created(URI.create("/category/"+ category.getId())).body(category);
+        return ResponseEntity.created(URI.create("/categories/"+ category.getId())).body(category);
     }
 
     @DeleteMapping("/{id}")
