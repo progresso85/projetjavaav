@@ -1,10 +1,7 @@
 package com.cergy4.projetjavaav.controllers;
 
 
-import com.cergy4.projetjavaav.filters.DateFilter;
-import com.cergy4.projetjavaav.filters.Filter;
-import com.cergy4.projetjavaav.filters.NumericFilter;
-import com.cergy4.projetjavaav.filters.TextualFilter;
+import com.cergy4.projetjavaav.filters.*;
 import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
 
@@ -63,10 +60,7 @@ public class ProductsController {
     public ResponseEntity<Object> listAll(@RequestParam Optional<String> rating, @RequestParam Optional<String> type,
                                           @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid){
         List<Filter> filters = new ArrayList<>();
-        rating.ifPresent(s -> filters.add(new NumericFilter("rating", s)));
-        type.ifPresent(s -> filters.add(new TextualFilter("type", s)));
-        createdat.ifPresent(s -> filters.add(new DateFilter("createdAt", s)));
-        categoryid.ifPresent(s -> filters.add(new NumericFilter("categoryId", s)));
+        handleFilters(filters, rating, type, createdat, categoryid);
         List<Product> list = productsDao.listAll(filters);
         return ResponseEntity.ok(list);
     }
@@ -104,7 +98,26 @@ public class ProductsController {
                 "product/orders?range=" + (count-rangeSize + 1) + "-" + count + ";rel=\"last\"");
         return ResponseEntity.ok()
                 .headers(responseHeaders)
-                .body(productsDao.orders(min, max));
+                .body(productsDao.pagination(min, max));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> search(@RequestParam String name,
+                                         @RequestParam Optional<String> rating, @RequestParam Optional<String> type,
+                                         @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid) {
+        List<Filter> filters = new ArrayList<>();
+        filters.add(new PatternFilter("name", name));
+        handleFilters(filters, rating, type, createdat, categoryid);
+
+        List<Product> list = productsDao.listAll(filters);
+        return ResponseEntity.ok(list);
+    }
+
+    private void handleFilters(List<Filter> filters, @RequestParam Optional<String> rating, @RequestParam Optional<String> type, @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid) {
+        rating.ifPresent(s -> filters.add(new NumericFilter("rating", s)));
+        type.ifPresent(s -> filters.add(new TextualFilter("type", s)));
+        createdat.ifPresent(s -> filters.add(new DateFilter("createdAt", s)));
+        categoryid.ifPresent(s -> filters.add(new NumericFilter("categoryId", s)));
     }
 
 }

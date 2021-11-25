@@ -15,16 +15,12 @@ import java.util.List;
 public class ProductsDao {
 
 
-    private static JdbcTemplate jdbcTemplate;
-
-
+    private final JdbcTemplate jdbcTemplate;
 
 
     public ProductsDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
-
 
 
     public void delete(int id) {
@@ -97,19 +93,19 @@ public class ProductsDao {
 
     public Product readById(int id) {
         String sql = "SELECT * FROM products WHERE id = ?;";
-        List<Product> Products = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), id);
+        List<Product> products = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), id);
 
-        return Products.get(0);
+        return products.get(0);
     }
 
-    public List<Product> orders(int min,int max) {
-        String sql = "SELECT * FROM Products LIMIT ?,?";
+    public List<Product> pagination(int min, int max) {
+        String sql = "SELECT * FROM products LIMIT ?,?";
         List<Product> list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), min-1, max-min+1);
         return list;
     }
 
     public int count(){
-        String sql = "SELECT COUNT(*) FROM Products";
+        String sql = "SELECT COUNT(*) FROM products";
        Integer count = jdbcTemplate.query(sql, rs -> { rs.next(); return rs.getInt(1);});
        assert count != null;
         return count;
