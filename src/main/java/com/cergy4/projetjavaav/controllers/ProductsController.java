@@ -1,16 +1,24 @@
 package com.cergy4.projetjavaav.controllers;
 
 
+import com.cergy4.projetjavaav.filters.DateFilter;
+import com.cergy4.projetjavaav.filters.Filter;
+import com.cergy4.projetjavaav.filters.NumericFilter;
+import com.cergy4.projetjavaav.filters.TextualFilter;
 import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
+
 import org.springframework.http.HttpHeaders;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -52,8 +60,14 @@ public class ProductsController {
 
 
     @GetMapping("")
-    public ResponseEntity<Object> listAll(){
-        List<Product> list = productsDao.listAll();
+    public ResponseEntity<Object> listAll(@RequestParam Optional<String> rating, @RequestParam Optional<String> type,
+                                          @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid){
+        List<Filter> filters = new ArrayList<>();
+        rating.ifPresent(s -> filters.add(new NumericFilter("rating", s)));
+        type.ifPresent(s -> filters.add(new TextualFilter("type", s)));
+        createdat.ifPresent(s -> filters.add(new DateFilter("createdAt", s)));
+        categoryid.ifPresent(s -> filters.add(new NumericFilter("categoryId", s)));
+        List<Product> list = productsDao.listAll(filters);
         return ResponseEntity.ok(list);
     }
 

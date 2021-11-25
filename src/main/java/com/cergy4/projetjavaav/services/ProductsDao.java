@@ -1,24 +1,23 @@
 package com.cergy4.projetjavaav.services;
 
+import com.cergy4.projetjavaav.filters.Filter;
 import com.cergy4.projetjavaav.models.Product;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
-
-
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 
 public class ProductsDao {
 
+
     private static JdbcTemplate jdbcTemplate;
+
+
 
 
     public ProductsDao(JdbcTemplate jdbcTemplate) {
@@ -60,10 +59,25 @@ public class ProductsDao {
         product.setId(id);
     }
 
-    public List<Product> listAll() {
-        String sql = "SELECT * FROM Products;";
-        List<Product> list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class));
-        return list;
+    public List<Product> listAll(List<Filter> filters) {
+        String sql = "SELECT * FROM products ";
+        if (!filters.isEmpty()) {
+            sql += " WHERE ";
+            sql += String.join(" AND ", filters.stream().map(Filter::buildSql).toArray(String[]::new));
+        }
+
+        List<Object> parameters = new ArrayList<>();
+        for (Filter filter : filters)
+            parameters.addAll(filter.getParameters());
+
+        String finalSql = sql;
+        return jdbcTemplate.query(con -> {
+            PreparedStatement ps = con.prepareStatement(finalSql);
+            for (int i = parameters.size() - 1; i >= 0; i--) {
+                ps.setObject(i+1, parameters.get(i));
+            }
+            return ps;
+        }, BeanPropertyRowMapper.newInstance(Product.class));
     }
 
     public Product update(int id, Product product) {
