@@ -3,9 +3,7 @@ package com.cergy4.projetjavaav.controllers;
 
 import com.cergy4.projetjavaav.models.Product;
 import com.cergy4.projetjavaav.services.ProductsDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -75,19 +73,24 @@ public class ProductsController {
        }
    }
 
-    /* @RestController
-    @RequestMapping("/orders")
-    public class EmployeeController
-    {
-        @GetMapping
-        public ResponseEntity<List<Product>> getAllEmployees(
-                @RequestParam(defaultValue = "0") Integer pageNo,
-                @RequestParam(defaultValue = "1") Integer pageSize,
-                @RequestParam(defaultValue = "id") String sortBy)
-        {
-            List<Product> list = service.getAllEmployees(pageNo, pageSize, sortBy);
+    @GetMapping("/orders")
+    public ResponseEntity<Object> orders(@RequestParam String range) {
+        String[] splitted = range.split("-");
 
-            return new ResponseEntity<List<Product>>(list, new HttpHeaders(), HttpStatus.OK);
-        }
-    }*/
+        int min = Integer.parseInt(splitted[0]);
+        int max = Integer.parseInt(splitted[1]);
+        int count = productsDao.count();
+        int rangeSize = max - min + 1;
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Range", min + "-" + max + "/" + count);
+        responseHeaders.set("Accept-Range", "product " + count);
+        responseHeaders.set("Link", "/products/orders?range=1-" + Math.min(rangeSize, count) + ";rel=\"first\", " +
+                "product/orders?range=" + Math.max(min-rangeSize, 1) + "-" + Math.max(1, min-1) + ";rel=\"prev\", "+
+                "product/orders?range=" + Math.min(max+1, count) + "-" + Math.min(max+rangeSize, count) + ";rel=\"next\", "+
+                "product/orders?range=" + (count-rangeSize + 1) + "-" + count + ";rel=\"last\"");
+        return ResponseEntity.ok()
+                .headers(responseHeaders)
+                .body(productsDao.orders(min, max));
+    }
+
 }

@@ -18,11 +18,13 @@ import java.util.List;
 
 public class ProductsDao {
 
-    private JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate jdbcTemplate;
+
 
     public ProductsDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
 
 
 
@@ -84,6 +86,19 @@ public class ProductsDao {
         List<Product> Products = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), id);
 
         return Products.get(0);
+    }
+
+    public List<Product> orders(int min,int max) {
+        String sql = "SELECT * FROM Products LIMIT ?,?";
+        List<Product> list = jdbcTemplate.query(sql, BeanPropertyRowMapper.newInstance(Product.class), min-1, max-min+1);
+        return list;
+    }
+
+    public int count(){
+        String sql = "SELECT COUNT(*) FROM Products";
+       Integer count = jdbcTemplate.query(sql, rs -> { rs.next(); return rs.getInt(1);});
+       assert count != null;
+        return count;
     }
 }
 
