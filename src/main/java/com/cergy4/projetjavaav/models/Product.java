@@ -1,7 +1,6 @@
 package com.cergy4.projetjavaav.models;
 
 import java.util.Date;
-import java.util.List;
 
 public class Product {
 
@@ -11,7 +10,6 @@ public class Product {
     private byte rating;
     private Date createdAt;
     private int categoryId;
-    private int productId;
 
     public int getId() {
         return id;

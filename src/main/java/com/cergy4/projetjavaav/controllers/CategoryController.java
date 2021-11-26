@@ -3,7 +3,6 @@ package com.cergy4.projetjavaav.controllers;
 import com.cergy4.projetjavaav.models.Category;
 import com.cergy4.projetjavaav.services.CategoryDao;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
