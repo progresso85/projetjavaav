@@ -58,10 +58,17 @@ public class ProductsController {
 
     @GetMapping("")
     public ResponseEntity<Object> listAll(@RequestParam Optional<String> rating, @RequestParam Optional<String> type,
-                                          @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid){
+                                          @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid,
+                                          @RequestParam Optional<String> asc,  @RequestParam Optional<String> desc){
+        List<String> sortAsc = new ArrayList<>();
+        List<String> sortDesc = new ArrayList<>();
+        asc.ifPresent(s -> sortAsc.addAll(List.of(s.split(","))));
+        desc.ifPresent(s -> sortDesc.addAll(List.of(s.split(","))));
+
         List<Filter> filters = new ArrayList<>();
         handleFilters(filters, rating, type, createdat, categoryid);
-        List<Product> list = productsDao.listAll(filters);
+
+        List<Product> list = productsDao.listAll(filters, sortAsc, sortDesc);
         return ResponseEntity.ok(list);
     }
 
@@ -109,7 +116,7 @@ public class ProductsController {
         filters.add(new PatternFilter("name", name));
         handleFilters(filters, rating, type, createdat, categoryid);
 
-        List<Product> list = productsDao.listAll(filters);
+        List<Product> list = productsDao.listAll(filters, new ArrayList<>(), new ArrayList<>());
         return ResponseEntity.ok(list);
     }
 

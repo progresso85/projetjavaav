@@ -1,5 +1,6 @@
 package com.cergy4.projetjavaav.services;
 
+
 import com.cergy4.projetjavaav.filters.Filter;
 import com.cergy4.projetjavaav.models.Product;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 
@@ -55,17 +58,40 @@ public class ProductsDao {
         product.setId(id);
     }
 
-    public List<Product> listAll(List<Filter> filters) {
+    private boolean isValidField(String value){
+        String[] validField = {"id","type","rating","name","createdat","categoryid"};
+        return Arrays.asList(validField).contains(value);
+    }
+
+    public List<Product> listAll(List<Filter> filters,List<String> sortAsc, List<String> sortDesc) {
         String sql = "SELECT * FROM products ";
         if (!filters.isEmpty()) {
             sql += " WHERE ";
             sql += String.join(" AND ", filters.stream().map(Filter::buildSql).toArray(String[]::new));
         }
 
+
         List<Object> parameters = new ArrayList<>();
         for (Filter filter : filters)
             parameters.addAll(filter.getParameters());
 
+        sortAsc = sortAsc.stream().filter(this::isValidField).collect(Collectors.toList());
+        sortDesc = sortDesc.stream().filter(this::isValidField).collect(Collectors.toList());
+
+        List<String> sorts = new ArrayList<>();
+        for (String item : sortAsc) {
+            sorts.add(item + " ASC " );
+        }
+
+        for (String item : sortDesc) {
+            sorts.add(item + " DESC " );
+        }
+
+        if(!sorts.isEmpty()){
+            sql += " ORDER BY ";
+            sql += String.join(" , ", sorts);
+        }
+        
         String finalSql = sql;
         return jdbcTemplate.query(con -> {
             PreparedStatement ps = con.prepareStatement(finalSql);
