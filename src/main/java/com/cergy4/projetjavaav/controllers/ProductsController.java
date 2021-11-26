@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-@Controller
+@RestController
 @RequestMapping("/products")
 public class ProductsController {
 
