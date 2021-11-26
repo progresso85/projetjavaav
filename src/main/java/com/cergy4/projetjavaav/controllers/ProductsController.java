@@ -57,7 +57,8 @@ public class ProductsController {
 
 
     @GetMapping("")
-    public ResponseEntity<Object> listAll(@RequestParam Optional<String> rating, @RequestParam Optional<String> type,
+    public ResponseEntity<Object> listAll(@RequestParam Optional<String> name,
+                                          @RequestParam Optional<String> rating, @RequestParam Optional<String> type,
                                           @RequestParam Optional<String> createdat, @RequestParam Optional<String> categoryid,
                                           @RequestParam Optional<String> asc,  @RequestParam Optional<String> desc){
         List<String> sortAsc = new ArrayList<>();
@@ -66,6 +67,7 @@ public class ProductsController {
         desc.ifPresent(s -> sortDesc.addAll(List.of(s.split(","))));
 
         List<Filter> filters = new ArrayList<>();
+        name.ifPresent(s -> filters.add(new TextualFilter("name", s)));
         handleFilters(filters, rating, type, createdat, categoryid);
 
         List<Product> list = productsDao.listAll(filters, sortAsc, sortDesc);
