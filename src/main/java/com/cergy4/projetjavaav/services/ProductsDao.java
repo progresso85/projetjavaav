@@ -91,7 +91,7 @@ public class ProductsDao {
             sql += " ORDER BY ";
             sql += String.join(" , ", sorts);
         }
-        
+
         String finalSql = sql;
         return jdbcTemplate.query(con -> {
             PreparedStatement ps = con.prepareStatement(finalSql);
